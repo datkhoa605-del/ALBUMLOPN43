@@ -199,7 +199,6 @@ html,body{height:100%;width:100%;background:#1a0d04;font-family:'Lora',Georgia,s
 <body>
 <input type="file" id="fileInput" accept="image/*" multiple>
 
-<!-- Browser / Firebase Guide — JS sẽ ẩn hoặc thay nội dung -->
 <div id="browserGuide">
   <div class="bg-icon">📱</div>
   <div class="bg-title">Cần mở bằng trình duyệt</div>
@@ -226,7 +225,6 @@ html,body{height:100%;width:100%;background:#1a0d04;font-family:'Lora',Georgia,s
     <div class="topbar-sep"></div>
     <div class="topbar-info">2023 · 2026</div>
     <div class="topbar-actions">
-      <!-- Dot màu xanh = đang kết nối Firebase, đỏ = mất kết nối -->
       <div class="conn-dot" id="connDot" title="Trạng thái kết nối Firebase"></div>
       <button class="btn-top btn-add hidden" id="addPhotoBtn" onclick="triggerUpload()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -280,7 +278,7 @@ html,body{height:100%;width:100%;background:#1a0d04;font-family:'Lora',Georgia,s
 
     <!-- GVCN -->
     <div class="page" id="page-gvcn">
-      <div class="page-header"><div class="page-tag">✦ Chân dung</div><div class="page-title">GVCN &amp; Ban Cán Sự</div><div class="page-rule"></div><div class="page-desc">Nhấn vào ô ảnh để tải lên · Nhấn vào tên/lời nhắn để chỉnh sửa · Thay đổi hiển thị cho cả lớp</div></div>
+      <div class="page-header"><div class="page-tag">✦ Chân dung</div><div class="page-title">GVCN &amp; Ban Cán Sự</div><div class="page-rule"></div><div class="page-desc">Nhấn vào ô ảnh để tải lên · Nhấn vào tên/lời nhắn để chỉnh sửa</div></div>
       <div class="committee-layout" id="committeeLayout">
         <div class="teacher-block" data-midx="0">
           <div class="person-photo-slot" data-midx="0"><div class="slot-icon">👤</div><div class="slot-label">Ảnh GV</div></div>
@@ -345,7 +343,7 @@ html,body{height:100%;width:100%;background:#1a0d04;font-family:'Lora',Georgia,s
   <div class="modal-box">
     <div class="modal-icon">📤</div>
     <div class="modal-title">Chia Sẻ Album Cho Lớp</div>
-    <div class="modal-desc">Album dùng <strong style="color:var(--gold-lt)">Firebase</strong> — mọi ảnh và lời nhắn được lưu trên cloud, ai mở file cũng thấy cùng một album.</div>
+    <div class="modal-desc">Album dùng <strong style="color:var(--gold-lt)">Firebase Realtime Database</strong> — ảnh và lời nhắn được lưu trên cloud, ai mở file cũng thấy cùng một album.</div>
     <div class="modal-steps">
       <div class="modal-step"><div class="modal-step-num">1</div><div>Nhấn <em>"Tải file"</em> — file <code style="color:var(--gold-lt);font-size:11px">Album_Ky_Niem_Lop12.html</code> sẽ được tải về</div></div>
       <div class="modal-step"><div class="modal-step-num">2</div><div>Gửi file cho cả lớp qua Zalo / Drive / USB</div></div>
@@ -360,46 +358,46 @@ html,body{height:100%;width:100%;background:#1a0d04;font-family:'Lora',Georgia,s
 
 <div class="tip" id="tip"></div>
 
-<!-- Firebase SDKs -->
+<!-- ✅ Chỉ cần Firebase App + Realtime Database — KHÔNG cần Storage (miễn phí hoàn toàn) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 
 <script>
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  ⚠  ĐIỀN FIREBASE CONFIG CỦA LỚP VÀO ĐÂY (bước duy nhất) ⚠   ║
 // ╚══════════════════════════════════════════════════════════════════╝
 var FIREBASE_CONFIG = {
-  apiKey : "AIzaSyDt9VpPaeuJyV8ftgN9eBegCNbZIlCVFTs" , 
-  authDomain : "albumlopn43.firebaseapp.com" , 
-  projectId : "albumlopn43" , 
-  storageBucket : "albumlopn43.firebasestorage.app" , 
-  messagingSenderId : "534141366051" , 
-  appId : "1:534141366051:web:3dee6e7e0f86dc71fce696" , 
-  measurementId : "G-RN7RFRP3LD"
+  apiKey:            "AIzaSyAAk7MMyVAAikhuVTWjivpTG33_oDOunkI",
+  authDomain:        "albummn43.firebaseapp.com",
+  databaseURL:       "https://albummn43-default-rtdb.firebaseio.com/",
+  projectId:         "albummn43",
+  storageBucket:     "albummn43.firebasestorage.app",
+  messagingSenderId: "819369237470",
+  appId:             "1:819369237470:web:1d44bb4d98579c3114db4f"
 };
 // ════════════════════════════════════════════════════════════════════
-// LƯU Ý QUAN TRỌNG — Firebase Rules phải được set như sau:
+// ✅ PHIÊN BẢN NÀY KHÔNG DÙNG STORAGE — HOÀN TOÀN MIỄN PHÍ
 //
-// Realtime Database Rules (Firebase Console → RTDB → Rules):
-// { "rules": { ".read": true, ".write": true } }
+// Ảnh được nén nhỏ ngay trên máy rồi lưu thẳng vào Realtime Database
+// (gói Spark miễn phí: 1GB lưu trữ, 10GB/tháng download)
 //
-// Storage Rules (Firebase Console → Storage → Rules):
-// rules_version = '2';
-// service firebase.storage {
-//   match /b/{bucket}/o {
-//     match /{allPaths=**} {
-//       allow read, write: if true;
-//     }
+// Chỉ cần bật Realtime Database (KHÔNG cần bật Storage):
+//   Firebase Console → Realtime Database → Create database
+//   → Chọn "Start in test mode" → Done
+//
+// Rules (Firebase Console → RTDB → Rules):
+// {
+//   "rules": {
+//     ".read": true,
+//     ".write": true
 //   }
 // }
 // ════════════════════════════════════════════════════════════════════
 
-var RTDB, FSTR;
+// ─── GLOBALS ─────────────────────────────────────────────────────────────────
+var RTDB; // Chỉ cần RTDB, không cần FSTR (Storage)
 var DB_ROOT = 'album_lop12';
-
 var PHOTO_PAGES = ['chung','hoatdong','doithuong','bande','thoiqua'];
-// SIZES dùng index cố định mỗi page để size nhất quán khi reload
 var SIZES = ['md','lg','sm','md','md','lg','sm','md'];
 var currentPage = 'cover';
 var lbImages = [], lbCurrent = 0;
@@ -418,9 +416,12 @@ function readFile(file) {
   });
 }
 
-function resizeToBlob(dataUrl, maxPx) {
+// ✅ Nén ảnh thành base64 dataURL — KHÔNG cần Storage
+// maxPx=900, quality=0.68 → ảnh ~50–80KB, đủ đẹp hiển thị album
+function resizeToDataUrl(dataUrl, maxPx, quality) {
   return new Promise(function(res) {
-    var MAX = maxPx || 1400;
+    var MAX = maxPx || 900;
+    var Q   = quality || 0.68;
     var img = new Image();
     img.onload = function() {
       var w = img.width, h = img.height;
@@ -432,15 +433,10 @@ function resizeToBlob(dataUrl, maxPx) {
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(img, 0, 0, w, h);
-      c.toBlob(function(b) { res(b); }, 'image/jpeg', 0.82);
+      res(c.toDataURL('image/jpeg', Q));
     };
     img.src = dataUrl;
   });
-}
-
-function uploadFile(blob, storagePath) {
-  return FSTR.ref(storagePath).put(blob, { contentType: 'image/jpeg' })
-    .then(function(snap) { return snap.ref.getDownloadURL(); });
 }
 
 // ─── SIDEBAR ─────────────────────────────────────────────────────────────────
@@ -468,7 +464,7 @@ function goTo(id) {
   closeSidebar();
 }
 
-// ─── UPLOAD ảnh trang ─────────────────────────────────────────────────────────
+// ─── UPLOAD ảnh trang ────────────────────────────────────────────────────────
 function triggerUpload() {
   var targetPage = currentPage;
   var fi = document.getElementById('fileInput');
@@ -480,29 +476,27 @@ function triggerUpload() {
   fi.click();
 }
 
+// ✅ Lưu ảnh nén thẳng vào RTDB — không qua Storage
 function handlePhotoUpload(file, pageId) {
-  showTip('⏳ Đang tải ảnh lên...');
+  showTip('⏳ Đang xử lý ảnh...');
   readFile(file)
-    .then(function(dataUrl) { return resizeToBlob(dataUrl, 1400); })
-    .then(function(blob) {
-      var path = DB_ROOT + '/photos/' + pageId + '/' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-      return uploadFile(blob, path).then(function(url) {
-        return RTDB.ref(DB_ROOT + '/grids/' + pageId).push({
-          url: url, caption: '',
-          ts: firebase.database.ServerValue.TIMESTAMP
-        });
+    .then(function(dataUrl) { return resizeToDataUrl(dataUrl, 900, 0.68); })
+    .then(function(dataUrl) {
+      return RTDB.ref(DB_ROOT + '/grids/' + pageId).push({
+        url: dataUrl,
+        caption: '',
+        ts: firebase.database.ServerValue.TIMESTAMP
       });
     })
     .then(function() { showTip('✓ Đã tải lên! Bạn bè sẽ thấy ngay ✦'); })
     .catch(function(e) {
-      showTip('⚠ Lỗi tải ảnh: ' + (e.message || e));
+      showTip('⚠ Lỗi: ' + (e.message || e));
       console.error('Upload error:', e);
     });
 }
 
-// ─── POLAROID ─────────────────────────────────────────────────────────────────
+// ─── POLAROID ────────────────────────────────────────────────────────────────
 function renderPolaroid(grid, emptyEl, fbKey, url, caption, tsIndex) {
-  // Xác định size dựa trên index ổn định (tính từ ts) thay vì photoIndex toàn cục
   var size = SIZES[(tsIndex || 0) % SIZES.length];
   if (emptyEl) emptyEl.style.display = 'none';
 
@@ -550,20 +544,18 @@ function updateCount(pageId) {
   }
 }
 
-// ─── GRID LISTENERS (FIX: orderByChild ts) ────────────────────────────────────
+// ─── GRID LISTENERS ──────────────────────────────────────────────────────────
 function setupGridListener(pageId) {
-  var grid = document.getElementById('grid-' + pageId);
+  var grid  = document.getElementById('grid-' + pageId);
   var empty = document.getElementById('empty-' + pageId);
-  var tsMap = {}; // fbKey → ts, dùng để tính size index nhất quán
+  var tsMap = {};
 
-  // FIX: orderByChild('ts') đảm bảo thứ tự ảnh nhất quán trên mọi thiết bị
   var ref = RTDB.ref(DB_ROOT + '/grids/' + pageId).orderByChild('ts');
 
   ref.on('child_added', function(snap) {
     var data = snap.val(); var key = snap.key;
-    if (grid.querySelector('[data-fbkey="' + key + '"]')) return; // tránh duplicate
+    if (grid.querySelector('[data-fbkey="' + key + '"]')) return;
     tsMap[key] = data.ts || 0;
-    // Tính index ổn định từ vị trí trong danh sách được sort
     var allKeys = Object.keys(tsMap).sort(function(a,b){ return tsMap[a]-tsMap[b]; });
     var idx = allKeys.indexOf(key);
     renderPolaroid(grid, empty, key, data.url, data.caption || '', idx);
@@ -579,19 +571,15 @@ function setupGridListener(pageId) {
     }
   });
 
-  // FIX: Đồng bộ caption khi người khác sửa
   ref.on('child_changed', function(snap) {
     var data = snap.val(); var key = snap.key;
     var el = grid.querySelector('[data-fbkey="' + key + '"]'); if (!el) return;
     var capEl = el.querySelector('.polaroid-caption');
-    // Chỉ update nếu user hiện tại không đang focus vào caption này
-    if (capEl && document.activeElement !== capEl) {
-      capEl.textContent = data.caption || '';
-    }
+    if (capEl && document.activeElement !== capEl) capEl.textContent = data.caption || '';
   });
 }
 
-// ─── SLOT UPLOAD (ảnh bìa, GVCN) ─────────────────────────────────────────────
+// ─── SLOT UPLOAD (ảnh bìa, GVCN) ────────────────────────────────────────────
 function triggerSlotUpload(slotEl) {
   if (slotEl.classList.contains('slot-has-img')) return;
   doSlotPick(slotEl);
@@ -607,18 +595,15 @@ function doSlotPick(slotEl) {
   fi.click();
 }
 
+// ✅ Slot cũng lưu base64 thẳng vào RTDB
 function handleSlotUpload(file, slotEl) {
   var dbPath = slotEl.dataset.dbpath;
   if (!dbPath) { showTip('⚠ Lỗi: slot chưa có dbpath'); return; }
-  showTip('⏳ Đang tải ảnh lên...');
+  showTip('⏳ Đang xử lý ảnh...');
   readFile(file)
-    .then(function(dataUrl) { return resizeToBlob(dataUrl, 1000); })
-    .then(function(blob) {
-      var storagePath = DB_ROOT + '/slot_imgs/' + dbPath.replace(/\//g, '_') + '_' + Date.now();
-      return uploadFile(blob, storagePath);
-    })
-    .then(function(url) {
-      return RTDB.ref(DB_ROOT + '/' + dbPath).set(url);
+    .then(function(dataUrl) { return resizeToDataUrl(dataUrl, 700, 0.72); })
+    .then(function(dataUrl) {
+      return RTDB.ref(DB_ROOT + '/' + dbPath).set(dataUrl);
     })
     .then(function() { showTip('✓ Đã cập nhật ảnh cho cả lớp! ✦'); })
     .catch(function(e) {
@@ -630,7 +615,6 @@ function handleSlotUpload(file, slotEl) {
 function buildSlotContent(slotEl, url) {
   slotEl.innerHTML = '';
   slotEl.classList.add('slot-has-img');
-  // Giữ lại dbpath và các data attribute
   var img = document.createElement('img'); img.src = url; img.alt = '';
   img.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;';
   slotEl.appendChild(img);
@@ -652,7 +636,6 @@ function buildSlotContent(slotEl, url) {
 
   overlay.appendChild(btnZoom); overlay.appendChild(btnReplace); slotEl.appendChild(overlay);
 
-  // Touch: tap để toggle overlay
   slotEl.addEventListener('touchend', function(e) {
     if (e.target.closest('.slot-btn')) return;
     e.preventDefault();
@@ -667,31 +650,25 @@ document.addEventListener('touchend', function(e) {
     document.querySelectorAll('.slot-tapped').forEach(function(s) { s.classList.remove('slot-tapped'); });
 }, { passive: true });
 
-// ─── COVER LISTENERS ──────────────────────────────────────────────────────────
+// ─── COVER LISTENERS ─────────────────────────────────────────────────────────
 function setupCoverListeners() {
-  // Set dbpath và onclick cho từng slot ảnh bìa
   var slots = document.querySelectorAll('#coverPhotos .cover-photo-slot');
   slots.forEach(function(slot) {
     var idx = slot.dataset.idx;
     var dbPath = 'cover/photos/' + idx;
     slot.dataset.dbpath = dbPath;
-
-    // FIX: gắn onclick qua JS thay vì HTML để dbpath luôn sẵn sàng
     slot.addEventListener('click', function() { triggerSlotUpload(slot); });
-
-    // Lắng nghe thay đổi từ Firebase
     RTDB.ref(DB_ROOT + '/' + dbPath).on('value', function(snap) {
       var url = snap.val(); if (!url) return;
       if (!slot.classList.contains('slot-has-img')) {
         buildSlotContent(slot, url);
-        slot.dataset.dbpath = dbPath; // đảm bảo giữ lại sau buildSlotContent
+        slot.dataset.dbpath = dbPath;
       } else {
         var imgEl = slot.querySelector('img'); if (imgEl) imgEl.src = url;
       }
     });
   });
 
-  // Classbox (tên lớp)
   var cbTimer;
   var cb = document.getElementById('coverClassbox');
   RTDB.ref(DB_ROOT + '/cover/classbox').on('value', function(snap) {
@@ -708,20 +685,17 @@ function setupCoverListeners() {
   }
 }
 
-// ─── COMMITTEE LISTENERS ──────────────────────────────────────────────────────
+// ─── COMMITTEE LISTENERS ─────────────────────────────────────────────────────
 function setupCommitteeListeners() {
-  var slots = document.querySelectorAll('#committeeLayout .person-photo-slot');
-  var nameEls = document.querySelectorAll('#committeeLayout .person-name-editable');
+  var slots    = document.querySelectorAll('#committeeLayout .person-photo-slot');
+  var nameEls  = document.querySelectorAll('#committeeLayout .person-name-editable');
   var quoteEls = document.querySelectorAll('#committeeLayout .person-quote-editable');
 
   slots.forEach(function(slot) {
     var i = slot.dataset.midx;
     var dbPath = 'committee/' + i + '/url';
     slot.dataset.dbpath = dbPath;
-
-    // FIX: gắn onclick qua JS
     slot.addEventListener('click', function() { triggerSlotUpload(slot); });
-
     RTDB.ref(DB_ROOT + '/' + dbPath).on('value', function(snap) {
       var url = snap.val(); if (!url) return;
       if (!slot.classList.contains('slot-has-img')) {
@@ -736,38 +710,22 @@ function setupCommitteeListeners() {
   nameEls.forEach(function(el) {
     var i = el.dataset.midx;
     var ref = RTDB.ref(DB_ROOT + '/committee/' + i + '/name');
-    ref.on('value', function(snap) {
-      if (snap.val() !== null && document.activeElement !== el) el.value = snap.val();
-    });
-    var t;
-    el.addEventListener('input', function() {
-      clearTimeout(t);
-      t = setTimeout(function() { ref.set(el.value || ''); }, 800);
-    });
+    ref.on('value', function(snap) { if (snap.val() !== null && document.activeElement !== el) el.value = snap.val(); });
+    var t; el.addEventListener('input', function() { clearTimeout(t); t = setTimeout(function() { ref.set(el.value || ''); }, 800); });
   });
 
   quoteEls.forEach(function(el) {
     var i = el.dataset.midx;
     var ref = RTDB.ref(DB_ROOT + '/committee/' + i + '/quote');
-    ref.on('value', function(snap) {
-      if (snap.val() !== null && document.activeElement !== el) el.value = snap.val();
-    });
-    var t;
-    el.addEventListener('input', function() {
-      clearTimeout(t);
-      t = setTimeout(function() { ref.set(el.value || ''); }, 800);
-    });
+    ref.on('value', function(snap) { if (snap.val() !== null && document.activeElement !== el) el.value = snap.val(); });
+    var t; el.addEventListener('input', function() { clearTimeout(t); t = setTimeout(function() { ref.set(el.value || ''); }, 800); });
   });
 }
 
-// ─── MESSAGES ─────────────────────────────────────────────────────────────────
+// ─── MESSAGES ────────────────────────────────────────────────────────────────
 function setupMessagesListener() {
-  var grid = document.getElementById('messagesGrid');
+  var grid   = document.getElementById('messagesGrid');
   var addBtn = grid.querySelector('.add-msg-btn');
-
-  // FIX: Dùng flag để chỉ thêm default khi DB thực sự trống
-  // và orderByChild('ts') để giữ thứ tự nhất quán
-  var initialized = false;
 
   RTDB.ref(DB_ROOT + '/messages').orderByChild('ts').on('child_added', function(snap) {
     var data = snap.val(); var key = snap.key;
@@ -784,24 +742,21 @@ function setupMessagesListener() {
   RTDB.ref(DB_ROOT + '/messages').on('child_changed', function(snap) {
     var data = snap.val(); var key = snap.key;
     var el = grid.querySelector('[data-fbkey="' + key + '"]'); if (!el) return;
-    var textEl = el.querySelector('.msg-text');
+    var textEl   = el.querySelector('.msg-text');
     var authorEl = el.querySelector('.msg-author');
-    var roleEl = el.querySelector('.msg-role');
-    // FIX: chỉ update field nào không đang được focus
-    if (textEl && document.activeElement !== textEl) textEl.textContent = data.text || '';
+    var roleEl   = el.querySelector('.msg-role');
+    if (textEl   && document.activeElement !== textEl)   textEl.textContent   = data.text   || '';
     if (authorEl && document.activeElement !== authorEl) authorEl.textContent = data.author || '';
-    if (roleEl && document.activeElement !== roleEl) roleEl.textContent = data.role || '';
+    if (roleEl   && document.activeElement !== roleEl)   roleEl.textContent   = data.role   || '';
   });
 
-  // FIX: Thêm default messages an toàn — chỉ chạy 1 lần khi DB trống
-  // Dùng transaction thay vì once() để tránh race condition
   RTDB.ref(DB_ROOT + '/messages').once('value', function(snap) {
     if (!snap.exists()) {
       var ref = RTDB.ref(DB_ROOT + '/messages');
       var defaults = [
         { text:'Ba năm cùng nhau, dù đi bốn phương trời vẫn luôn là anh em một nhà. Giữ sức khỏe và sống thật tốt nghe mấy đứa!', author:'Lớp Trưởng', role:'Ban cán sự', ts: 1 },
-        { text:'Nhớ ngày đầu vào lớp còn ngại ngùng, giờ đây mỗi đứa một ngả — nhưng hãy nhớ nhau nhé, mãi mãi là bạn!', author:'·············', role:'Bạn học', ts: 2 },
-        { text:'Chúc các em luôn mạnh mẽ, tự tin bước vào giai đoạn mới. Thầy/cô rất tự hào về tất cả các em!', author:'Thầy / Cô', role:'GVCN', ts: 3 }
+        { text:'Nhớ ngày đầu vào lớp còn ngại ngùng, giờ đây mỗi đứa một ngả — nhưng hãy nhớ nhau nhé, mãi mãi là bạn!',           author:'·············', role:'Bạn học',   ts: 2 },
+        { text:'Chúc các em luôn mạnh mẽ, tự tin bước vào giai đoạn mới. Thầy/cô rất tự hào về tất cả các em!',                     author:'Thầy / Cô',   role:'GVCN',      ts: 3 }
       ];
       defaults.forEach(function(m) { ref.push(m); });
     }
@@ -815,25 +770,18 @@ function renderMsgCard(grid, addBtn, fbKey, text, author, role) {
     '<div class="msg-text" contenteditable spellcheck="false">' + escHtml(text) + '</div>' +
     '<div class="msg-author" contenteditable spellcheck="false">' + escHtml(author) + '</div>' +
     '<div class="msg-role" contenteditable spellcheck="false">' + escHtml(role) + '</div>';
-
-  var fields = ['msg-text', 'msg-author', 'msg-role'];
-  fields.forEach(function(cls) {
+  ['msg-text','msg-author','msg-role'].forEach(function(cls) {
     var el = card.querySelector('.' + cls); if (!el) return;
-    var t;
-    el.addEventListener('input', function() {
-      clearTimeout(t);
-      t = setTimeout(function() { saveMsgCard(card, fbKey); }, 800);
-    });
+    var t; el.addEventListener('input', function() { clearTimeout(t); t = setTimeout(function() { saveMsgCard(card, fbKey); }, 800); });
   });
-
   grid.insertBefore(card, addBtn);
 }
 
 function saveMsgCard(card, fbKey) {
   RTDB.ref(DB_ROOT + '/messages/' + fbKey).update({
-    text: card.querySelector('.msg-text').textContent || '',
+    text:   card.querySelector('.msg-text').textContent   || '',
     author: card.querySelector('.msg-author').textContent || '',
-    role: card.querySelector('.msg-role').textContent || ''
+    role:   card.querySelector('.msg-role').textContent   || ''
   });
 }
 
@@ -850,15 +798,13 @@ function addMessage() {
   showTip('Nhấn vào từng dòng để nhập nội dung ✦');
 }
 
-function deleteMsg(btn) { deleteMsgFB(btn); }
-
 function deleteMsgFB(btn) {
   var card = btn.closest('.msg-card'); var key = card.dataset.fbkey;
   card.style.cssText += ';opacity:0;transition:opacity 0.2s';
   setTimeout(function() { RTDB.ref(DB_ROOT + '/messages/' + key).remove(); }, 220);
 }
 
-// ─── LIGHTBOX ─────────────────────────────────────────────────────────────────
+// ─── LIGHTBOX ────────────────────────────────────────────────────────────────
 function openLightboxSingle(src, caption) {
   lbImages = [{ src: src, caption: caption || '' }]; lbCurrent = 0; renderLightbox();
   document.getElementById('lightbox').classList.add('open');
@@ -902,12 +848,13 @@ function lbKeyHandler(e) {
   var sx = 0, sy = 0;
   document.getElementById('lightbox').addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
   document.getElementById('lightbox').addEventListener('touchend', function(e) {
-    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    var dx = e.changedTouches[0].clientX - sx;
+    var dy = e.changedTouches[0].clientY - sy;
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) lbNav(dx < 0 ? 1 : -1);
   }, { passive: true });
 })();
 
-// ─── EXPORT ───────────────────────────────────────────────────────────────────
+// ─── EXPORT ──────────────────────────────────────────────────────────────────
 function showExportModal() { document.getElementById('exportModal').classList.add('open'); }
 function closeExportModal() { document.getElementById('exportModal').classList.remove('open'); }
 function handleModalClick(e) { if (e.target === document.getElementById('exportModal')) closeExportModal(); }
@@ -919,7 +866,7 @@ function doExport() {
   var a = document.createElement('a'); a.href = url; a.download = 'Album_Ky_Niem_Lop12.html';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(function() { URL.revokeObjectURL(url); }, 5000);
-  showTip('✓ File đã tải xuống! Gửi cho cả lớp — ai mở cũng thấy cùng một album ✦');
+  showTip('✓ File đã tải xuống! Gửi cho cả lớp nhé ✦');
 }
 
 // ─── TIP ─────────────────────────────────────────────────────────────────────
@@ -929,30 +876,29 @@ function showTip(msg) {
   clearTimeout(tipTimer); tipTimer = setTimeout(function() { tip.classList.remove('show'); }, 3800);
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ─── INIT ────────────────────────────────────────────────────────────────────
 (function init() {
-  // Hiện guide nếu Firebase config chưa điền
   if (FIREBASE_CONFIG.apiKey === 'PASTE_API_KEY_HERE') {
     var guide = document.getElementById('browserGuide');
     guide.classList.add('show');
     guide.innerHTML =
       '<div class="bg-icon">⚙️</div>' +
       '<div class="bg-title">Chưa cài đặt Firebase</div>' +
-      '<div class="bg-sub">Bạn cần tạo Firebase project và điền config vào file HTML này để album đồng bộ cho cả lớp.</div>' +
+      '<div class="bg-sub">Phiên bản này <strong style="color:#E8C46A">KHÔNG cần Storage</strong> — chỉ cần Realtime Database miễn phí!</div>' +
       '<div class="bg-steps">' +
-      '<div class="bg-step"><div class="bg-num">1</div><div>Vào <strong style="color:#E8C46A">console.firebase.google.com</strong> → Tạo dự án mới (miễn phí)</div></div>' +
-      '<div class="bg-step"><div class="bg-num">2</div><div>Trong dự án → nhấn biểu tượng <strong style="color:#E8C46A">&lt;/&gt;</strong> (Web) → Đăng ký → Sao chép config</div></div>' +
-      '<div class="bg-step"><div class="bg-num">3</div><div>Bật <strong style="color:#E8C46A">Realtime Database</strong> và <strong style="color:#E8C46A">Storage</strong> → chế độ <strong style="color:#E8C46A">thử nghiệm (test mode)</strong></div></div>' +
-      '<div class="bg-step"><div class="bg-num">4</div><div>Mở file này bằng Notepad → tìm <strong style="color:#E8C46A">PASTE_API_KEY_HERE</strong> → thay bằng config của bạn → Lưu file</div></div>' +
+      '<div class="bg-step"><div class="bg-num">1</div><div>Vào <strong style="color:#E8C46A">console.firebase.google.com</strong> → Tạo dự án mới</div></div>' +
+      '<div class="bg-step"><div class="bg-num">2</div><div>Nhấn biểu tượng <strong style="color:#E8C46A">&lt;/&gt;</strong> (Web) → Đăng ký app → Sao chép config</div></div>' +
+      '<div class="bg-step"><div class="bg-num">3</div><div>Bật <strong style="color:#E8C46A">Realtime Database</strong> → chọn <strong style="color:#E8C46A">test mode</strong> (<strong>KHÔNG cần bật Storage</strong>)</div></div>' +
+      '<div class="bg-step"><div class="bg-num">4</div><div>Mở file bằng Notepad → tìm <strong style="color:#E8C46A">PASTE_API_KEY_HERE</strong> → thay bằng config → Lưu file</div></div>' +
       '</div>' +
-      '<div class="bg-note">Sau khi điền xong, lưu file và mở lại bằng Chrome/Safari ✦</div>';
+      '<div class="bg-note">✅ Gói miễn phí Spark: 1GB lưu trữ — đủ cho cả trăm ảnh ✦</div>';
     return;
   }
 
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
     RTDB = firebase.database();
-    FSTR = firebase.storage();
+    // ✅ Không khởi tạo Storage nữa
   } catch(e) {
     showTip('⚠ Firebase config không hợp lệ: ' + e.message);
     console.error(e);
@@ -965,13 +911,11 @@ function showTip(msg) {
   });
   updateCount('loinhansection');
 
-  // Khởi tạo listeners
   setupCoverListeners();
   setupCommitteeListeners();
   PHOTO_PAGES.forEach(setupGridListener);
   setupMessagesListener();
 
-  // Indicator kết nối
   RTDB.ref('.info/connected').on('value', function(snap) {
     var dot = document.getElementById('connDot');
     if (!dot) return;
@@ -981,7 +925,7 @@ function showTip(msg) {
     } else {
       dot.classList.remove('ok'); dot.classList.add('err');
       dot.title = 'Mất kết nối — đang thử lại...';
-      showTip('⚠ Đang kết nối lại Firebase...');
+      showTip('⚠ Đang kết nối lại...');
     }
   });
 
